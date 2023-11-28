@@ -42,7 +42,6 @@ This command will check if the code follows the formatting standards set by Blac
 
 - **Formatting Code:**
 ```make format```
-
 Automatically formats your code according to Black's formatting standards.
 
 ## Pre-commit Hook
