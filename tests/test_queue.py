@@ -1,4 +1,5 @@
 import unittest
+from random import randint
 from src.queue import Task, Resources, TaskQueue
 
 
@@ -50,3 +51,33 @@ class TestTaskQueue(unittest.TestCase):
         self.assertIsNotNone(processed_task)
         # Task with highest priority and sufficient resources should be processed
         self.assertEqual(processed_task.id, 2)
+
+    def test_queue(self):
+        task_queue = TaskQueue()
+        for i in range(10000):
+            if i % 2 == 0:
+                resources = Resources(ram=1, cpu_cores=1, gpu_count=1)
+
+            else:
+                resources = Resources(ram=1000, cpu_cores=1000, gpu_count=1000)
+
+            task = Task(
+                id=i,
+                priority=randint(0, 100),
+                resources=resources,
+                content="",
+                result="",
+            )
+
+            task_queue.add_task(task)
+
+        last_priority = 100
+        for i in range(5000):
+            task = task_queue.get_task(Resources(100, 100, 100))
+            self.assertLessEqual(
+                task.priority,
+                last_priority,
+                f"{task.priority} <= {last_priority}  failed",
+            )
+
+            last_priority = task.priority

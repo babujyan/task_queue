@@ -100,8 +100,19 @@ class TaskQueue:
         Iterates through the queue to find a task matching the resource criteria.
         Returns the first matching task or None if no match is found.
         """
-        for task in self.queue:
+        tasks_to_requeue = []
+        found = False
+        while self.queue:
+            task = heapq.heappop(self.queue)
             if task.resources <= available_resources:
-                self.queue.remove(task)
-                return task
-        return None
+                found = True
+                break
+            else:
+                tasks_to_requeue.append(task)
+
+        for task_to_queue in tasks_to_requeue:
+            self.add_task(task_to_queue)
+        if found:
+            return task
+        else:
+            return None
